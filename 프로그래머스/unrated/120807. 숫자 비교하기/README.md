@@ -1,10 +1,10 @@
 # [level unrated] 숫자 비교하기 - 120807 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/120807) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/120807?language=cpp) 
 
 ### 성능 요약
 
-메모리: 3.73 MB, 시간: 0.01 ms
+메모리: 3.67 MB, 시간: 0.01 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2023년 12월 0일 16:57:36
+2023년 12월 0일 17:20:31
 
 ### 문제 설명
 
