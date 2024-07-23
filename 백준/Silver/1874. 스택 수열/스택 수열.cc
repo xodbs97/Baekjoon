@@ -1,55 +1,68 @@
-#include <bits/stdc++.h>
-#include <string>
+#include <iostream>
+#include <stack>
+#include <vector>
+
 using namespace std;
 
-int main(void) {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
 	int n;
 	cin >> n;
 
-	int* stk = new int[n + 1];
-	int* ans = new int[n * 2];
-	fill(stk, stk + n + 1, 1);
+	stack<int> stk;
+	vector<bool> notUsed(n + 1, true);
+	int big = 0;
+	vector<char> printer;
 
-	int num;
-	cin >> num;
-	int max = num;
-	int last = num;
-	stk[num] = 0;
-	int a_idx = 0;
-	while (num--) {
-		ans[a_idx++] = '+';
-	}
-	ans[a_idx++] = '-';
+	bool fail = false;
 
-	int rpt = n - 1;
-	while (rpt--) {
+	int nCpy = n;
+	while (nCpy--)
+	{
+		int num;
 		cin >> num;
-		if (num < last - 1) {
-			for (int i = last - 1; i > num; i--) {
-				if (stk[i]) {
-					cout << "NO";
-					return 0;
-				}
+
+		if (notUsed[num]) // 아직 수를 스택에 넣지 않았다면
+		{
+			for (int i = big + 1; i <= num; ++i)
+			{
+				notUsed[i] = false;
+				stk.push(i);
+				printer.push_back('+');
 			}
+
+			big = num;
+
+			stk.pop();
+			printer.push_back('-');
 		}
-		else if (num > last) {
-			for (int i = max + 1; i <= num; i++) {
-				ans[a_idx++] = '+';
-			}
-			max = num;
+		// 스택에 들어갔던 수라면
+		else if (stk.empty() || stk.top() != num) // 불가능
+		{
+			fail = true;
+			break;
 		}
-		last = num;
-		stk[num] = 0;
-		ans[a_idx++] = '-';
-	}
-	for (int i = 0; i < n * 2; i++) {
-		cout << (char)ans[i] << "\n";
+		else // 가능
+		{
+			stk.pop();
+			printer.push_back('-');
+		}
 	}
 
-	delete[] stk;
-	delete[] ans;
+	if (fail)
+	{
+		cout << "NO";
+	}
+	else
+	{
+		for (char& c : printer)
+		{
+			cout << c << '\n';
+		}
+	}
+
 	return 0;
 }
