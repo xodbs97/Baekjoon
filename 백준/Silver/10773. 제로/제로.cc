@@ -1,30 +1,37 @@
-#include <bits/stdc++.h>
-#include <string>
+#include <iostream>
+#include <stack>
+
 using namespace std;
 
-int main(void) {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-	stack<int> s;
+	stack<int> stk;
 	int k;
 	cin >> k;
-	while (k--) {
+	while (k--)
+	{
 		int n;
 		cin >> n;
-		if (n) {
-			s.push(n);
+		if (n)
+		{
+			stk.push(n);
 		}
-		else {
-			s.pop();
+		else
+		{
+			stk.pop();
 		}
 	}
-	int size = s.size();
+
 	int sum = 0;
-	while (size--) {
-		sum += s.top();
-		s.pop();
+	while (!stk.empty())
+	{
+		sum += stk.top();
+		stk.pop();
 	}
+
 	cout << sum;
 
 	return 0;
