@@ -1,30 +1,39 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <stack>
+
 using namespace std;
 
-using ll = long long;
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-
-	ll ans = 0;
-	stack<ll> st;
-
-	int n; // 빌딩 개수
+	int n;
 	cin >> n;
-	for (int i = 0; i < n; i++) {
-		ll h;
-		cin >> h;
-		while (st.size()) {
-			if (st.top() > h) {
-				ans += st.size();
-				break;
-			}
-			else st.pop();
+
+	stack<int> building;
+
+	int height;
+	cin >> height;
+	building.push(height);
+
+	long long answer = 0;
+
+	for (int i = 1; i < n; ++i)
+	{
+		cin >> height;
+
+		while (!building.empty() && building.top() <= height)
+		{
+			building.pop();
 		}
-		st.push(h);
+
+		answer += building.size();
+
+		building.push(height);
 	}
-	cout << ans;
+
+	cout << answer;
 
 	return 0;
 }
