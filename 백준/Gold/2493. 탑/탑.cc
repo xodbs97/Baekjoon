@@ -1,57 +1,46 @@
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
-int main(void) {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
 	int n;
 	cin >> n;
 
-	int** tower = new int* [n];
-	for (int i = 0; i < n; i++) {
-		tower[i] = new int[2];
-	}
+	stack<pair<int, int>> skyline;
 
-	int valid = 0;
-	tower[0][0] = 1;
-	cin >> tower[0][1];
-	cout << 0 << ' ';
+	int first;
+	cin >> first;
 
-	for (int i = 2; i <= n; i++) {
-		int h;
-		cin >> h;
-		if (h > tower[0][1]) {
-			valid = 0;
-			tower[0][0] = i;
-			tower[0][1] = h;
-			cout << 0 << ' ';
-		}
-		else if (valid) {
-			for (int j = valid; j >= 0; j--) {
-				if (h > tower[j][1]) {
-					continue;
-				}
-				valid = j + 1;
-				tower[valid][0] = i;
-				tower[valid][1] = h;
-				cout << tower[j][0] << ' ';
-				break;
-			}
+	int big = first;
+	skyline.push({ first ,1 });
+
+	cout << "0 ";
+
+	for (int i = 2; i <= n; ++i)
+	{
+		int building;
+		cin >> building;
+
+		if (big < building)
+		{
+			cout << "0 ";
+			big = building;
 		}
 		else {
-			++valid;
-			tower[1][0] = i;
-			tower[1][1] = h;
-			cout << tower[0][0] << ' ';
+			while (skyline.top().first < building)
+			{
+				skyline.pop();
+			}
+			cout << skyline.top().second << ' ';
 		}
-	}
 
-	for (int i = 0; i < n; i++) {
-		delete[] tower[i];
+		skyline.push({ building,i });
 	}
-	delete[] tower;
 
 	return 0;
 }
