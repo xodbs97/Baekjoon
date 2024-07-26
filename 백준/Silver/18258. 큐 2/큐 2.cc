@@ -1,46 +1,74 @@
 #include <iostream>
-#include <queue>
 #include <string>
+#include <queue>
 
 using namespace std;
 
-int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-
-	queue<int> q;
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
 	int n;
 	cin >> n;
 	cin.ignore();
 
-	while (n--) {
-		string cmd;
-		getline(cin, cmd);
+	queue<int> q;
+	while (n--)
+	{
+		string op;
+		getline(cin, op);
 
-		if (cmd.find(" ") != string::npos) {
-			q.push(stoi(cmd.substr(cmd.find(" ") + 1)));
-		}
-		else if (cmd.front() == 'p') {
-			if (q.empty()) {
+		switch (op[0])
+		{
+		case 'b':
+			if (q.empty())
+			{
 				cout << -1 << '\n';
 			}
-			else {
+			else
+			{
+				cout << q.back() << '\n';
+			}
+			break;
+		case 'e':
+			if (q.empty())
+			{
+				cout << 1 << '\n';
+			}
+			else
+			{
+				cout << 0 << '\n';
+			}
+			break;
+		case 'f':
+			if (q.empty())
+			{
+				cout << -1 << '\n';
+			}
+			else
+			{
+				cout << q.front() << '\n';
+			}
+			break;
+		case 'p':
+			if (op[1] == 'u')
+			{
+				q.push(stoi(op.substr(5)));
+			}
+			else if (q.empty())
+			{
+				cout << -1 << '\n';
+			}
+			else
+			{
 				cout << q.front() << '\n';
 				q.pop();
 			}
-		}
-		else if (cmd.front() == 's') {
+			break;
+		case 's':
 			cout << q.size() << '\n';
-		}
-		else if (cmd.front() == 'e') {
-			cout << (q.empty() ? 1 : 0) << '\n';
-		}
-		else if (cmd.front() == 'f') {
-			cout << (q.empty() ? -1 : q.front()) << '\n';
-		}
-		else if (cmd.front() == 'b') {
-			cout << (q.empty() ? -1 : q.back()) << '\n';
+			break;
 		}
 	}
 
