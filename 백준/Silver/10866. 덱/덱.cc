@@ -1,71 +1,99 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <deque>
 #include <string>
+#include <deque>
 
-int main(int argc, const char* argv[])
+using namespace std;
+
+int main(void)
 {
-	std::cin.tie(NULL);
-	std::cout.tie(NULL);
-	std::ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-	std::deque<int> DQ;
-	
 	int n;
-	std::cin >> n;
+	cin >> n;
+	cin.ignore();
 
-	int num = 0;
-	while (n--) {
-		std::string str;
-		std::cin >> str;
+	deque<int> dq;
+	while (n--)
+	{
+		string op;
+		getline(cin, op);
 
-		if (str == "push_front") {
-			std::cin >> num;
-			DQ.push_front(num);
-		}
-		else if (str == "push_back") {
-			std::cin >> num;
-			DQ.push_back(num);
-		}
-		else if (str == "pop_front") {
-			if (!DQ.empty()) {
-				std::cout << DQ.front() << "\n";
-				DQ.pop_front();
+		switch (op[0])
+		{
+		case 'b': // back
+			if (dq.empty())
+			{
+				cout << -1 << '\n';
 			}
-			else {
-				std::cout << "-1\n";
+			else
+			{
+				cout << dq.back() << '\n';
 			}
-		}
-		else if (str == "pop_back") {
-			if (!DQ.empty()) {
-				std::cout << DQ.back() << "\n";
-				DQ.pop_back();
+			break;
+		case 'e': // empty
+			if (dq.empty())
+			{
+				cout << 1 << '\n';
 			}
-			else {
-				std::cout << "-1\n";
+			else
+			{
+				cout << 0 << '\n';
 			}
-		}
-		else if (str == "size") {
-			std::cout << DQ.size() << "\n";
-		}
-		else if (str == "empty") {
-			std::cout << DQ.empty() << "\n";
-		}
-		else if (str == "front") {
-			if (!DQ.empty()) {
-				std::cout << DQ.front() << "\n";
+			break;
+		case 'f': // front
+			if (dq.empty())
+			{
+				cout << -1 << '\n';
 			}
-			else {
-				std::cout << "-1\n";
+			else
+			{
+				cout << dq.front() << '\n';
 			}
-		}
-		else if (str == "back") {
-			if (!DQ.empty()) {
-				std::cout << DQ.back() << "\n";
+			break;
+		case 'p':
+			if (op[1] == 'u') // push
+			{
+				if (op[5] == 'f') // front
+				{
+					dq.push_front(stoi(op.substr(11)));
+				}
+				else // back
+				{
+					dq.push_back(stoi(op.substr(10)));
+				}
 			}
-			else {
-				std::cout << "-1\n";
+			else // pop
+			{
+				if (op[4] == 'f') // front
+				{
+					if (dq.empty())
+					{
+						cout << -1 << '\n';
+					}
+					else
+					{
+						cout << dq.front() << '\n';
+						dq.pop_front();
+					}
+				}
+				else // back
+				{
+					if (dq.empty())
+					{
+						cout << -1 << '\n';
+					}
+					else
+					{
+						cout << dq.back() << '\n';
+						dq.pop_back();
+					}
+				}
 			}
+			break;
+		case 's': // size
+			cout << dq.size() << '\n';
+			break;
 		}
 	}
 
