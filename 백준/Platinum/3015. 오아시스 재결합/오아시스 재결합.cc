@@ -16,7 +16,6 @@ int main(void)
 
 	stack<pair<int, int>> line; // { 키, 인원 }
 	line.push({ height,1 });
-	int start = height; // 맨 앞사람의 키
 
 	long long answer = 0;
 	for (int i = 1; i < n; ++i)
@@ -30,7 +29,7 @@ int main(void)
 		}
 		else if (line.top().first == height)
 		{
-			if (start > height)
+			if (1 < line.size())
 			{
 				++answer;
 			}
@@ -48,13 +47,12 @@ int main(void)
 			if (line.empty())
 			{
 				line.push({ height,1 });
-				start = height;
 			}
 			else
 			{
 				if (line.top().first == height)
 				{
-					if (start > height)
+					if (1 < line.size())
 					{
 						++answer;
 					}
