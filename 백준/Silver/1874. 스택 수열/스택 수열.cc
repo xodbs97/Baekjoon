@@ -1,6 +1,6 @@
 #include <iostream>
+#include <string>
 #include <stack>
-#include <vector>
 
 using namespace std;
 
@@ -9,35 +9,31 @@ int main(void)
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	int n;
-	cin >> n;
+	string answer;
 
 	stack<int> stk;
-	vector<bool> notUsed(n + 1, true);
-	int big = 0;
-	vector<char> printer;
-
+	int curMax = 0;
 	bool fail = false;
 
-	int nCpy = n;
-	while (nCpy--)
+	int n;
+	cin >> n;
+	while (n--)
 	{
 		int num;
 		cin >> num;
 
-		if (notUsed[num]) // 아직 수를 스택에 넣지 않았다면
+		if (curMax < num) // 아직 수를 스택에 넣지 않았다면
 		{
-			for (int i = big + 1; i <= num; ++i)
+			for (int i = curMax + 1; i <= num; ++i)
 			{
-				notUsed[i] = false;
 				stk.push(i);
-				printer.push_back('+');
+				answer.append("+\n");
 			}
 
-			big = num;
+			curMax = num;
 
 			stk.pop();
-			printer.push_back('-');
+			answer.append("-\n");
 		}
 		// 스택에 들어갔던 수라면
 		else if (stk.empty() || stk.top() != num) // 불가능
@@ -48,7 +44,7 @@ int main(void)
 		else // 가능
 		{
 			stk.pop();
-			printer.push_back('-');
+			answer.append("-\n");
 		}
 	}
 
@@ -58,10 +54,7 @@ int main(void)
 	}
 	else
 	{
-		for (char& c : printer)
-		{
-			cout << c << '\n';
-		}
+		cout << answer;
 	}
 
 	return 0;
