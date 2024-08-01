@@ -1,60 +1,103 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
+#include <string>
+
+#include <deque>
 
 using namespace std;
 
-int main(void) {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+int main(void)
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-	int t;
+	int t; // 테스트 케이스의 개수
 	cin >> t;
-	while (t--) {
-		string cmd;
-		cin >> cmd;
-		int n;
+	while (t--)
+	{
+		string p; // 수행할 함수
+		cin >> p;
+
+		int n; // 배열에 들어있는 수의 개수
 		cin >> n;
-		string list;
-		cin >> list;
-		stringstream ss(list);
+
 		deque<int> dq;
-		char discard;
-		int num;
-		ss >> discard;
-		while (ss >> num) {
-			dq.push_back(num);
-			ss >> discard;
+		string arr; // 배열에 들어있는 정수
+		cin >> arr;
+
+		if (n)
+		{
+			string num;
+			for (size_t i = 1; i < arr.size(); ++i)
+			{
+				if ('0' <= arr[i] && arr[i] <= '9')
+				{
+					num.push_back(arr[i]);
+				}
+				else
+				{
+					dq.push_back(stoi(num));
+					num.clear();
+				}
+			}
 		}
-        
-		bool right = true;
-		bool is_success = true;
-		for (char c : cmd) {
-			if (c == 'R') right = !right;
-			else {
-				if (dq.empty()) {
-					cout << "error\n";
-					is_success = false;
+
+		bool printError = false;
+		bool isFrontFront = true;
+		for (char& c : p)
+		{
+			if (c == 'D')
+			{
+				if (dq.empty())
+				{
+					printError = true;
 					break;
 				}
-				if (right) dq.pop_front();
-				else dq.pop_back();
+
+				if (isFrontFront)
+				{
+					dq.pop_front();
+				}
+				else
+				{
+					dq.pop_back();
+				}
+			}
+			else // c == 'R'
+			{
+				isFrontFront = !isFrontFront;
 			}
 		}
-		if (is_success) {
+
+		if (printError)
+		{
+			cout << "error\n";
+		}
+		else if (isFrontFront)
+		{
 			cout << '[';
-			int size = dq.size();
-			if (right) {
-				for (int i = 0; i < size; i++) {
-					cout << dq.front();
-					dq.pop_front();
-					if (i != size - 1) cout << ',';
-				}
+			while (!dq.empty() && dq.size() != 1)
+			{
+				cout << dq.front() << ',';
+				dq.pop_front();
 			}
-			else {
-				for (int i = 0; i < size; i++) {
-					cout << dq.back();
-					dq.pop_back();
-					if (i != size - 1) cout << ',';
-				}
+			if (dq.size() == 1)
+			{
+				cout << dq.front();
+			}
+			cout << "]\n";
+		}
+		else
+		{
+			cout << '[';
+			while (!dq.empty() && dq.size() != 1)
+			{
+				cout << dq.back() << ',';
+				dq.pop_back();
+			}
+			if (dq.size() == 1)
+			{
+				cout << dq.back();
 			}
 			cout << "]\n";
 		}
