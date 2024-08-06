@@ -5,9 +5,9 @@ int main(void)
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(nullptr);
 
-	int paint_num = 0;
-	int paint_size;
-	int largest_paint = 0;
+	int paint_num = 0; // 그림의 개수
+	int paint_size; // 그림의 넓이
+	int largest_paint = 0; // 가장 넓은 그림의 넓이
 
 	int i;
 	int j;
@@ -19,18 +19,17 @@ int main(void)
 	const int X[4] = { 0,0,1,-1 };
 	const int Y[4] = { 1,-1,0,0 };
 
-	int** board = new int* [n];
+	int board[500][500];
 	for (i = 0; i < n; ++i)
 	{
-		board[i] = new int[m];
 		for (j = 0; j < m; ++j)
 		{
 			std::cin >> board[i][j];
 		}
 	}
 
-	int* row_stk = new int[n * m * 2];
-	int* col_stk = new int[n * m * 2];
+	int row_stk[500000];
+	int col_stk[500000];
 	int size = 0;
 
 	int cur_row;
@@ -81,15 +80,6 @@ int main(void)
 	}
 
 	std::cout << paint_num << '\n' << largest_paint;
-
-	for (i = 0; i < n; ++i)
-	{
-		delete[] board[i];
-	}
-	delete[] board;
-
-	delete[] row_stk;
-	delete[] col_stk;
 
 	return 0;
 }
