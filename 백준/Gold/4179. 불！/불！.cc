@@ -1,121 +1,115 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
+#include <queue>
 
 using namespace std;
 
-#define X first
-#define Y second
+int main(void)
+{
+	std::ios_base::sync_with_stdio(false);
+	std::cin.tie(nullptr);
 
-char board[1002][1002];
-int jihun[1002][1002];
-int fire[1002][1002];
-int n, m, dx[4]{ 1,0,-1,0 }, dy[4]{ 0,1,0,-1 };
+	const int X[4] = { 1,-1,0,0 };
+	const int Y[4] = { 0,0,1,-1 };
 
-int main(void) {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	int i;
+	int j;
+	int row; // 미로 행의 개수
+	int col; // 미로 열의 개수
+	cin >> row >> col;
 
-	cin >> n >> m;
-	queue<pair<int, int>> jq;
-	queue<pair<int, int>> fq;
-	for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++) {
-		cin >> board[i][j];
-		if (board[i][j] == 'J') {
-			jq.push({ i,j });
-			jihun[i][j] = 1;
-			fire[i][j] = -1;
-		}
-		if (board[i][j] == 'F') {
-			fq.push({ i,j });
-			fire[i][j] = 0;
-			jihun[i][j] = -1;
-		}
-		if (board[i][j] == '.') {
-			jihun[i][j] = -1;
-			fire[i][j] = -1;
-		}
-	}
-	for (int i = 0; i <= n + 1; i++) {
-		jihun[i][0] = -1;
-		jihun[i][m + 1] = -1;
-		fire[i][0] = 1000;
-		fire[i][m + 1] = 1000;
-	}
-	for (int j = 0; j <= m + 1; j++) {
-		jihun[0][j] = -1;
-		jihun[n + 1][j] = -1;
-		fire[0][j] = 1000;
-		fire[n + 1][j] = 1000;
-	}
+	queue<pair<pair<int, int>, int>> jihun; // { row,col },time
+	queue<pair<pair<int, int>, int>> fire; // { row,col },time
 
-	if (fq.empty()) {
-		while (!jq.empty()) {
-			auto cur = jq.front();
-			jq.pop();
-			if (cur.X == 0 || cur.X == n + 1 || cur.Y == 0 || cur.Y == m + 1) {
-				int ans = 1000;
-				for (int i = 0; i <= n + 1; i++) {
-					if (jihun[i][0] > 0) ans = min(ans, jihun[i][0]);
-					if (jihun[i][m + 1] > 0) ans = min(ans, jihun[i][m + 1]);
-				}
-				for (int j = 0; j <= m + 1; j++) {
-					if (jihun[0][j] > 0) ans = min(ans, jihun[0][j]);
-					if (jihun[n + 1][j] > 0) ans = min(ans, jihun[n + 1][j]);
-				}
-				cout << ans - 1;
-				return 0;
+	char** maze = new char* [row];
+	for (i = 0; i < row; ++i)
+	{
+		maze[i] = new char[col];
+		for (j = 0; j < col; ++j)
+		{
+			cin >> maze[i][j];
+			if (maze[i][j] == 'J')
+			{
+				jihun.push({ { i,j },0 });
 			}
-			for (int i = 0; i < 4; i++) {
-				int px = cur.X + dx[i], py = cur.Y + dy[i];
-				if (px<0 || px>n + 1 || py<0 || py>m + 1) continue;
-				if (jihun[px][py] >= 0) continue;
-				jihun[px][py] = jihun[cur.X][cur.Y] + 1;
-				jq.push({ px,py });
+			else if (maze[i][j] == 'F')
+			{
+				fire.push({ { i,j },0 });
 			}
 		}
 	}
-	else {
-		while (!fq.empty()) {
-			auto cur = fq.front();
-			fq.pop();
-			for (int i = 0; i < 4; i++) {
-				int px = cur.X + dx[i], py = cur.Y + dy[i];
-				if (px<1 || px>n || py<1 || py>m) continue;
-				if (fire[px][py] >= 0) continue;
-				fire[px][py] = fire[cur.X][cur.Y] + 1;
-				fq.push({ px,py });
-			}
+
+	int time = 0;
+	bool escaped = false;
+
+	pair<int, int> cur_pos;
+	pair<int, int> sub_pos;
+	for (;;)
+	{
+		if (escaped || jihun.empty())
+		{
+			break;
 		}
 
-		while (!jq.empty()) {
-			auto cur = jq.front();
-			jq.pop();
-			if (cur.X == 0 || cur.X == n + 1 || cur.Y == 0 || cur.Y == m + 1) {
-				int ans = 1000;
-				for (int i = 0; i <= n + 1; i++) {
-					if (jihun[i][0] > 0) ans = min(ans, jihun[i][0]);
-					if (jihun[i][m + 1] > 0) ans = min(ans, jihun[i][m + 1]);
-				}
-				for (int j = 0; j <= m + 1; j++) {
-					if (jihun[0][j] > 0) ans = min(ans, jihun[0][j]);
-					if (jihun[n + 1][j] > 0) ans = min(ans, jihun[n + 1][j]);
-				}
-				cout << ans - 1;
-				return 0;
+		while (jihun.size() && jihun.front().second == time)
+		{
+			cur_pos = jihun.front().first;
+			jihun.pop();
+
+			if ((cur_pos.first == 0 || cur_pos.first == row - 1 || cur_pos.second == 0 || cur_pos.second == col - 1) && maze[cur_pos.first][cur_pos.second] == 'J')
+			{
+				escaped = true;
+				break;
 			}
-			for (int i = 0; i < 4; i++) {
-				int px = cur.X + dx[i], py = cur.Y + dy[i];
-				if (px<0 || px>n + 1 || py<0 || py>m + 1) continue;
-				if (jihun[px][py] >= 0) continue;
-				if (jihun[cur.X][cur.Y] >= fire[px][py]) {
-					jihun[px][py] = 0;
+
+			for (i = 0; i < 4; ++i)
+			{
+				sub_pos = { cur_pos.first + X[i],cur_pos.second + Y[i] };
+				if (sub_pos.first < 0 || row <= sub_pos.first || sub_pos.second < 0 || col <= sub_pos.second || maze[sub_pos.first][sub_pos.second] != '.')
+				{
 					continue;
 				}
-				jihun[px][py] = jihun[cur.X][cur.Y] + 1;
-				jq.push({ px,py });
+
+				maze[sub_pos.first][sub_pos.second] = 'J';
+				jihun.push({ sub_pos ,time + 1 });
 			}
 		}
+
+		while (fire.size() && fire.front().second == time)
+		{
+			cur_pos = fire.front().first;
+			fire.pop();
+
+			for (i = 0; i < 4; ++i)
+			{
+				sub_pos = { cur_pos.first + X[i],cur_pos.second + Y[i] };
+				if (sub_pos.first < 0 || row <= sub_pos.first || sub_pos.second < 0 || col <= sub_pos.second || maze[sub_pos.first][sub_pos.second] == '#' || maze[sub_pos.first][sub_pos.second] == 'F')
+				{
+					continue;
+				}
+
+				maze[sub_pos.first][sub_pos.second] = 'F';
+				fire.push({ sub_pos ,time + 1 });
+			}
+		}
+
+		++time;
 	}
 
-	cout << "IMPOSSIBLE";
+	if (escaped)
+	{
+		cout << time;
+	}
+	else
+	{
+		cout << "IMPOSSIBLE";
+	}
+
+	for (i = 0; i < row; ++i)
+	{
+		delete[] maze[i];
+	}
+	delete[] maze;
+
 	return 0;
 }
