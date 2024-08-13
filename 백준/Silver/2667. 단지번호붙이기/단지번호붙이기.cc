@@ -1,52 +1,86 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <queue>
 
 using namespace std;
 
-// 격자판
-int board[30][30];
-// 답들의 모음을 저장하는 배열
-int ans[350];
-// 상하좌우를 가리키기 쉽도록 만들어주는 배열
-int mx[4]{ 1,0,-1,0 }, my[4]{ 0,1,0,-1 };
+using pos = pair<int, int>;
 
-int main(void) {
-	ios::sync_with_stdio(false);
-	cin.tie(0);
+int main(void)
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
 
-	int n;
+	const int R4[4] = { 0,0,1,-1 };
+	const int C4[4] = { 1,-1,0,0 };
+
+	int n; // 지도의 크기
 	cin >> n;
-	for (int i = 0; i < n; ++i) {
-		string s;
-		cin >> s;
-		for (int j = 0; j < n; ++j) board[i][j] = s[j] - '0';
-	}
 
-	// 단지 크기를 저장하는 곳을 가리키는 번호
-	int idx = 0;
-	for (int w = 0; w < n; ++w) for (int h = 0; h < n; ++h) {
-		// 단지의 시작
-		if (board[w][h]) {
-			queue<pair<int, int>> q;
-			board[w][h] = 0;
-			q.push({ w,h });
-			while (q.size()) {
-				int cx = q.front().first, cy = q.front().second;
-				++ans[idx];
-				q.pop();
-				for (int i = 0; i < 4; ++i) {
-					int px = cx + mx[i], py = cy + my[i];
-					if (px < 0 || px >= n || py < 0 || py >= n) continue;
-					if (board[px][py] == 0) continue;
-					board[px][py] = 0;
-					q.push({ px,py });
-				}
-			}
-			++idx;
+	string str;
+	vector<vector<bool>> map(n, vector<bool>(n));
+	for (int r = 0; r < n; ++r)
+	{
+		cin >> str;
+		for (int c = 0; c < n; ++c)
+		{
+			map[r][c] = str[c] - '0';
 		}
 	}
-	sort(ans, ans + idx);
-	cout << idx << "\n";
-	for (int i = 0; i < idx; ++i) cout << ans[i] << "\n";
+
+	int cnt;
+	vector<int> house;
+
+	queue<pos> q;
+	pos cur;
+	int sr;
+	int sc;
+	for (int r = 0; r < n; ++r)
+	{
+		for (int c = 0; c < n; ++c)
+		{
+			if (map[r][c])
+			{
+				q.push({ r,c });
+				map[r][c] = false;
+				cnt = 1;
+
+				while (!q.empty())
+				{
+					cur = q.front();
+					q.pop();
+
+					for (int i = 0; i < 4; ++i)
+					{
+						sr = cur.first + R4[i];
+						sc = cur.second + C4[i];
+
+						if (sr < 0 || n <= sr || sc < 0 || n <= sc || !map[sr][sc])
+						{
+							continue;
+						}
+
+						q.push({ sr,sc });
+						map[sr][sc] = false;
+						++cnt;
+					}
+				}
+
+				house.push_back(cnt);
+			}
+		}
+	}
+
+	sort(house.begin(), house.end());
+	cout << house.size() << '\n';
+	for (const int& num : house)
+	{
+		cout << num << '\n';
+	}
 
 	return 0;
 }
