@@ -29,7 +29,6 @@ int main(void)
 
 	bool repeat;
 	int cur;
-	int sub;
 	while (!q.empty() && dot[k] == -1)
 	{
 		cur = q.front();
@@ -40,34 +39,33 @@ int main(void)
 		}
 		checked[cur] = true;
 
-		sub = cur;
 		repeat = true;
 		do
 		{
-			if (100000 < sub * 2 || checked[sub * 2])
+			if (cur == 0 || 100000 < cur * 2 || checked[cur * 2])
 			{
 				repeat = false;
 			}
-			else if (dot[sub * 2] == -1 || dot[sub] < dot[sub * 2])
+			else if (dot[cur * 2] == -1 || dot[cur] < dot[cur * 2])
 			{
-				dot[sub * 2] = dot[sub];
-				checked[sub * 2] = true;
+				dot[cur * 2] = dot[cur];
+				checked[cur * 2] = true;
 			}
 
-			if (sub && !checked[sub - 1] && dot[sub - 1] == -1)
+			if (cur && dot[cur - 1] == -1)
 			{
-				q.push(sub - 1);
-				dot[sub - 1] = dot[sub] + 1;
+				q.push(cur - 1);
+				dot[cur - 1] = dot[cur] + 1;
 			}
 
-			if (sub < 100000 && !checked[sub + 1] && dot[sub + 1] == -1)
+			if (cur < 100000 && dot[cur + 1] == -1)
 			{
-				q.push(sub + 1);
-				dot[sub + 1] = dot[sub] + 1;
+				q.push(cur + 1);
+				dot[cur + 1] = dot[cur] + 1;
 			}
 
-			sub *= 2;
-		} while (sub <= 100000 && repeat);
+			cur *= 2;
+		} while (cur <= 100000 && repeat);
 	}
 
 	cout << dot[k];
