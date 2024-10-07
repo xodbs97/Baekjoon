@@ -1,41 +1,49 @@
-#include <bits/stdc++.h>
+#include <iostream>
 
 using namespace std;
 
-bool isused1[40];
-bool isused2[40];
-bool isused3[40];
+static int n;
+static int answer;
+static bool col[14];
+static bool diagonal[27];
+static bool antiDiagonal[27];
 
-int cnt = 0;
-int n;
-void func(int cur) {
-	if (cur == n) {
-		cnt++;
+static void nQueen(const int _row);
+
+int main(void)
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+
+	cin >> n;
+	nQueen(0);
+	cout << answer;
+
+	return 0;
+}
+
+void nQueen(const int _row)
+{
+	if (_row == n)
+	{
+		++answer;
 		return;
 	}
 
-	for (int i = 0; i < n; i++) {
-		if (isused1[i] || isused2[i + cur] || isused3[cur - i + n - 1])	continue;
-
-		isused1[i] = 1;
-		isused2[i + cur] = 1;
-		isused3[cur - i + n - 1] = 1;
-
-		func(cur + 1);
-
-		isused1[i] = 0;
-		isused2[i + cur] = 0;
-		isused3[cur - i + n - 1] = 0;
+	for (int c = 0; c < n; ++c)
+	{
+		int d = _row - c + n - 1;
+		int ad = _row + c;
+		if (!col[c] && !diagonal[d] && !antiDiagonal[ad])
+		{
+			col[c] = true;
+			diagonal[d] = true;
+			antiDiagonal[ad] = true;
+			nQueen(_row + 1);
+			col[c] = false;
+			diagonal[d] = false;
+			antiDiagonal[ad] = false;
+		}
 	}
-}
-
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-
-	cin >> n;
-	func(0);
-	cout << cnt;
-
-	return 0;
 }
